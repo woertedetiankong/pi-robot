@@ -67,6 +67,8 @@ PDF/OCR 在本地处理，首次 OCR 可能下载语言数据。交给 agent 的
 
 ## 更新与卸载
 
+0.1.2 同步 learnlearn 的 `cc74746` 修复：追问聊天中可用 ↑ / ↓ 逐行滚动，不影响输入草稿；同时更新快捷键提示和回归测试。
+
 ```sh
 pi update https://github.com/woertedetiankong/pi-robot
 pi remove https://github.com/woertedetiankong/pi-robot

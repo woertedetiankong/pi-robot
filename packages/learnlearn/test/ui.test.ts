@@ -338,3 +338,28 @@ test("submitting during a reply keeps the draft and explains the next action", a
   assert(panel.render(80).join("\n").includes("草稿已保留，按 Enter 发送"));
   state.close();
 });
+
+test("chat arrows scroll long replies without changing the draft or card scroll", () => {
+  const state = fixture(), terminal = new TestTerminal(); terminal.rows = 20;
+  state.messages = [{ role: "assistant", text: Array.from({ length: 70 }, (_, i) => `回答第 ${i} 行`).join("\n") }];
+  state.reading.chatScroll = 10; state.reading.scroll = 4;
+  const panel = new Discussion(state, new TuiMainScreen(terminal), theme, () => {}, async () => {}, true);
+  panel.handleInput("保留我的草稿");
+  const before = panel.render(64).join("\n");
+  state.reading.replyStart = 0;
+  panel.handleInput("\x1b[A");
+  assert.equal(state.reading.chatScroll, 9);
+  assert.equal(state.reading.replyStart, undefined);
+  assert.equal(state.reading.followReply, false);
+  assert.notEqual(panel.render(64).join("\n"), before);
+  panel.handleInput("\x1b[B"); panel.render(64);
+  assert.equal(state.reading.chatScroll, 10);
+  assert.equal(state.reading.draft, "保留我的草稿");
+  assert.equal(state.reading.scroll, 4);
+  for (let i = 0; i < 100; i++) { panel.handleInput("\x1b[A"); panel.render(64); }
+  assert.equal(state.reading.chatScroll, 0);
+  for (let i = 0; i < 100; i++) { panel.handleInput("\x1b[B"); panel.render(64); }
+  assert(panel.render(64).join("\n").includes("回答第 69 行"));
+  assert.equal(state.reading.draft, "保留我的草稿");
+  state.close();
+});

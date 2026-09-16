@@ -1,6 +1,6 @@
 {
   "name": "pi-robot",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Five pi extensions with integrated document tools and collaboration skills",
   "type": "module",
   "license": "MIT",

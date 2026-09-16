@@ -248,10 +248,12 @@ export class Discussion implements Component, Focusable {
       else this.done();
       return;
     }
-    if (this.chatMode && (matchesKey(data, "pageUp") || matchesKey(data, "pageDown"))) {
+    if (this.chatMode && (matchesKey(data, "up") || matchesKey(data, "down") || matchesKey(data, "pageUp") || matchesKey(data, "pageDown"))) {
       this.state.reading.followReply = false;
       this.state.reading.replyStart = undefined;
     }
+    if (this.chatMode && matchesKey(data, "up")) { this.scroll = Math.max(0, this.scroll - 1); this.tui.requestRender(); return; }
+    if (this.chatMode && matchesKey(data, "down")) { this.scroll++; this.tui.requestRender(); return; }
     if (matchesKey(data, "pageUp")) { this.scroll = Math.max(0, this.scroll - 6); this.tui.requestRender(); return; }
     if (matchesKey(data, "pageDown")) { this.scroll += 6; this.tui.requestRender(); return; }
     if (matchesKey(data, "ctrl+s") || (!this.chatMode && data === "s")) { void this.dialog(this.save); return; }
@@ -303,9 +305,9 @@ export class Discussion implements Component, Focusable {
     }
     if (!this.state.chat.busy && this.notice.startsWith("上一条还在回答")) this.notice = "草稿已保留，按 Enter 发送";
     if (this.notice) rows.push(...wrapped([this.notice], w).map(text => ({ text, muted: true })));
-    const actions = this.chatMode ? `${this.state.chat.busy ? "回答中，可返回主任务 · " : ""}Ctrl+X 停止 · Ctrl+R 重试\nCtrl+S 收藏 · PgUp/PgDn 滚动 · Esc 返回卡片` : !this.state.revealed && this.state.card?.options ? "↑↓ / A–D 选择 · Enter 确认 · 1–4 快答 · Ctrl+R 看答案\n[ 上一张 · n 下一张 · h 历史 · t 追问\ns 收藏 · p 固定 · f 反馈 · o 原文 · Esc 返回" : `? 没看懂 · d ${this.state.reading.details ? "收起" : "展开"}详解 · o ${this.state.reading.sources ? "收起" : "查看"}原文 · f 反馈\n[ 上一张 · n 下一张 · h 历史 · t 追问\ns 收藏 · p 固定 · ↑↓ 滚动 · Esc 返回`;
+    const actions = this.chatMode ? `${this.state.chat.busy ? "回答中，可返回主任务 · " : ""}Ctrl+X 停止 · Ctrl+R 重试\nCtrl+S 收藏 · ↑↓ / PgUp/PgDn 滚动 · Esc 返回卡片` : !this.state.revealed && this.state.card?.options ? "↑↓ / A–D 选择 · Enter 确认 · 1–4 快答 · Ctrl+R 看答案\n[ 上一张 · n 下一张 · h 历史 · t 追问\ns 收藏 · p 固定 · f 反馈 · o 原文 · Esc 返回" : `? 没看懂 · d ${this.state.reading.details ? "收起" : "展开"}详解 · o ${this.state.reading.sources ? "收起" : "查看"}原文 · f 反馈\n[ 上一张 · n 下一张 · h 历史 · t 追问\ns 收藏 · p 固定 · ↑↓ 滚动 · Esc 返回`;
     const status = statusLine(this.state);
-    const compactActions = this.chatMode ? "Esc 返回 · Ctrl+X 停止\nCtrl+R 重试 · Ctrl+S 收藏" : this.state.revealed ? "? 没看懂 · d 详解 · f 反馈\nt 追问 · ↑↓ 滚动 · Esc 返回" : "Enter 确认 · Ctrl+R 答案\nt 追问 · h 历史 · Esc 返回";
+    const compactActions = this.chatMode ? "↑↓ 滚动 · Esc 返回\nCtrl+X 停止 · Ctrl+R 重试 · Ctrl+S 收藏" : this.state.revealed ? "? 没看懂 · d 详解 · f 反馈\nt 追问 · ↑↓ 滚动 · Esc 返回" : "Enter 确认 · Ctrl+R 答案\nt 追问 · h 历史 · Esc 返回";
     const hints = this.tui.terminal.rows < 22 ? compactActions.split("\n").map(line => truncateToWidth(line, w)).join("\n") : actions;
     const footer = (status ? truncateToWidth(status, w) + "\n" : "") + hints;
     const footerRows = wrapped([footer], w).length;
