@@ -10,7 +10,7 @@ updated: 2026-09-16
 Portable five-plugin package with six skills and Herdr status integration.
 
 ## Current State
-SDK and production-only installation checks pass; remote publishing and Git installation verification remain.
+SDK and production-only installation checks pass; initial Git installation is verified; tested dependency fixes await push.
 
 ## Git And Persistent State
 - Branch: main (initial commit pending).
@@ -24,6 +24,10 @@ SDK and production-only installation checks pass; remote publishing and Git inst
 ## Validation
 - npm test: passed; commands, skills, one code tool, real Monty query.
 - npm pack --dry-run: succeeded.
+- Actual pi install from GitHub followed by RPC: five plugin commands and six bundled skills verified.
+- npm run test:documents: 3/3 passed, including PDF rendering and image crops.
+- Mixed PDF real OCR smoke: passed text extraction, rendering, Tesseract OCR, search, citations and cache reuse.
+- npm audit --omit=dev: zero known vulnerabilities.
 - Production tarball: npm install --omit=dev succeeded; actual pi RPC commands and six skills verified.
 - SDK smoke against production-only package: real Monty query passed.
 
@@ -34,7 +38,7 @@ npm test # expected: passed true; mismatch means loading or bridge regression
 ```
 
 ## Next Steps
-1. Commit and push, then verify Git installation from the remote.
+1. Push dependency fixes and verify remote update.
 
 ## Implementation Log
 See [implementation-log.md](implementation-log.md) for packaging and licensing decisions.

@@ -19,14 +19,22 @@
     "version": "0.1.0",
     "license": "MIT",
     "revision": null,
-    "note": "MIT publication authorized by owner on 2026-09-16."
+    "note": "MIT publication authorized by owner on 2026-09-16.",
+    "bundleChanges": [
+      "MIT publication authorized 2026-09-16",
+      "pdfjs-dist 6.3.289, sharp 0.35.4, @napi-rs/canvas 1.0.9",
+      "PDF loading-task cleanup adapted to PDF.js 6"
+    ]
   },
   {
     "directory": "packages/pi-intercom",
     "name": "pi-intercom",
     "version": "0.13.0",
     "license": "MIT",
-    "revision": null
+    "revision": null,
+    "bundleChanges": [
+      "Trailing whitespace normalized; runtime logic unchanged"
+    ]
   },
   {
     "directory": "packages/learnlearn",

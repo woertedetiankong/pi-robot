@@ -13,7 +13,7 @@ async function openPdf(path) {
     standardFontDataUrl: join(dirname(require.resolve('pdfjs-dist/package.json')), 'standard_fonts') + '/',
     useSystemFonts: true, isEvalSupported: false,
   });
-  try { return await task.promise; }
+  try { return { pdf: await task.promise, task }; }
   catch (error) { await task.destroy(); throw error; }
 }
 
@@ -28,7 +28,7 @@ async function run(job) {
     return { total:result.totalPages, pages: result.pages.filter(p => !pages || pages.includes(p.pageNum)).map(p => ({ page: p.pageNum, text: p.text, markdown:p.markdown })) };
   }
   if (job.op === 'render') {
-    const pdf = await openPdf(job.path);
+    const { pdf, task } = await openPdf(job.path);
     try {
       if (job.page < 1 || job.page > pdf.numPages) throw new Error('Page out of range');
       const page = await pdf.getPage(job.page);
@@ -41,7 +41,7 @@ async function run(job) {
       const { writeFile } = await import('node:fs/promises');
       await writeFile(job.output, canvas.toBuffer('image/png'));
       return { width: canvas.width, height: canvas.height };
-    } finally { await pdf.destroy(); }
+    } finally { await task.destroy(); }
   }
   if (job.op === 'ocr') {
     const { createWorker, PSM } = await import('tesseract.js');

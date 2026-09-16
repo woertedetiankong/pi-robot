@@ -1,4 +1,4 @@
-﻿# pi-robot
+# pi-robot
 
 一次安装五个 pi 插件：Python 工具编排、行为评测、会话通信、嵌入式文档分析和学习卡片。
 
@@ -62,6 +62,7 @@ pi remove https://github.com/woertedetiankong/pi-robot
 ```sh
 npm ci
 npm test
+npm run test:documents
 npm pack --dry-run
 ```
 

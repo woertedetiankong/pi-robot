@@ -41,28 +41,29 @@
     ]
   },
   "dependencies": {
-    "minimatch": "10.2.6",
-    "smol-toml": "1.8.0",
-    "yaml": "2.9.1",
-    "@pydantic/monty": "0.0.23",
-    "typebox": "1.1.38",
     "@llamaindex/liteparse": "2.14.4",
-    "@napi-rs/canvas": "0.1.100",
-    "pdfjs-dist": "5.6.205",
-    "sharp": "0.34.5",
+    "@napi-rs/canvas": "1.0.9",
+    "@pydantic/monty": "0.0.23",
+    "minimatch": "10.2.6",
+    "pdfjs-dist": "6.3.289",
+    "sharp": "0.35.4",
+    "smol-toml": "1.8.0",
     "tesseract.js": "7.0.0",
-    "tsx": "^4.20.0"
+    "tsx": "^4.20.0",
+    "typebox": "1.1.38",
+    "yaml": "2.9.1"
   },
   "devDependencies": {
-    "@earendil-works/pi-coding-agent": "0.85.1",
     "@earendil-works/pi-ai": "0.85.1",
+    "@earendil-works/pi-coding-agent": "0.85.1",
     "@earendil-works/pi-tui": "0.85.1",
-    "tsx": "^4.20.0",
-    "typescript": "^5.9.0",
     "@types/node": "^24.0.0",
-    "pdf-lib": "^1.17.1"
+    "pdf-lib": "^1.17.1",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
   },
   "scripts": {
-    "test": "tsx test/bundle-smoke.ts"
+    "test": "tsx test/bundle-smoke.ts",
+    "test:documents": "tsx --test packages/pi-embedded-docs/test/*.test.ts"
   }
 }
