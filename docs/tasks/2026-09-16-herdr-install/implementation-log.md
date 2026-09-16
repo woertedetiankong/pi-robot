@@ -15,3 +15,4 @@ Install Herdr along with the plugin bundle.
 - codetrap FTS returned one unrelated database-deletion card; no applicable installer lesson found.
 - Ten installer tests passed; actual npm lifecycle on Windows detected Herdr 0.9.0 without download or mutation. Missing-install paths on Windows/macOS/Linux are mocked, not real OS installation tests.
 - Production npm tarball includes scripts/install-herdr.mjs. npm install --omit=dev executed postinstall and preserved existing Herdr. Bundle smoke still passes all five commands, six skills and real Monty document query.
+- Local Git credential manager no longer supplied GitHub credentials. Published the identical tested Git tree through the connected GitHub API (commit a01be56), without force-updating the branch. Actual pi update fetched this commit and ran postinstall successfully, reusing Herdr 0.9.0.

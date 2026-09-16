@@ -2,7 +2,7 @@
 
 > Created: 2026-09-16
 > Parent plan: None found
-> Status: In progress
+> Status: Complete
 
 ## Goal
 Make the existing pi install command also install Herdr when missing.
