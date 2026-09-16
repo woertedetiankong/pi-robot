@@ -9,3 +9,5 @@
 - `skills/herdr` and `extensions/herdr-agent-state.ts`: integration artifacts installed by Herdr 0.9.0 (pi integration version 8). Original generated-file notices retained; Herdr itself is not bundled. The root MIT notice does not relicense third-party Herdr artifacts.
 
 Transitive npm dependencies retain their respective licenses. The lockfile records the resolved dependency versions. Exact component revisions where available are recorded in sources.json.
+
+As of pi-robot 0.1.1, the installation hook invokes https://herdr.dev/install.ps1 (Windows) or https://herdr.dev/install.sh (macOS/Linux) when no working Herdr is found. Herdr binaries are downloaded and verified by its official installer; they are not vendored or relicensed by this repository.

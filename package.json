@@ -1,6 +1,6 @@
 {
   "name": "pi-robot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Five pi extensions with integrated document tools and collaboration skills",
   "type": "module",
   "license": "MIT",
@@ -22,7 +22,8 @@
     "README.md",
     "THIRD_PARTY_NOTICES.md",
     "sources.json",
-    "LICENSE"
+    "LICENSE",
+    "scripts"
   ],
   "pi": {
     "extensions": [
@@ -64,6 +65,9 @@
   },
   "scripts": {
     "test": "tsx test/bundle-smoke.ts",
-    "test:documents": "tsx --test packages/pi-embedded-docs/test/*.test.ts"
+    "test:documents": "tsx --test packages/pi-embedded-docs/test/*.test.ts",
+    "postinstall": "node scripts/install-herdr.mjs",
+    "setup:herdr": "node scripts/install-herdr.mjs",
+    "test:installer": "node --test test/install-herdr.test.mjs"
   }
 }

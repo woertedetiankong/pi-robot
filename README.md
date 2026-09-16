@@ -1,6 +1,6 @@
 # pi-robot
 
-一次安装五个 pi 插件：Python 工具编排、行为评测、会话通信、嵌入式文档分析和学习卡片。
+一次安装五个 pi 插件，并在缺少 Herdr 时自动安装 Herdr 应用：Python 工具编排、行为评测、会话通信、嵌入式文档分析和学习卡片。
 
 ## 安装
 
@@ -10,7 +10,24 @@
 pi install https://github.com/woertedetiankong/pi-robot
 ```
 
-重启 pi 后即可使用。Git 安装会自动安装运行依赖，无需分别安装五个插件或克隆其他仓库。模型凭据由自己的 pi 配置管理。
+安装会自动安装运行依赖，并通过 npm postinstall 检查 Herdr：已有可用版本则保留；没有则调用 [Herdr 官方安装器](https://herdr.dev/docs/install/)。支持 Windows、macOS、Linux 的 x64 / arm64；Linux 安装器还需要 curl、awk 和 SHA-256 校验工具。模型凭据由自己的 pi 配置管理。
+
+安装结束后打开新终端，执行 `herdr`，再在 Herdr 窗格内执行 `pi`，即可使用分屏和多 agent 管理。只用插件时，也可以直接重启 pi。安装流程不会自动启动 Herdr 或关闭现有会话。
+
+Windows 官方安装器会更新用户 PATH；macOS / Linux 默认安装到 `~/.local/bin`，如果安装器提示该目录不在 PATH，请按提示加入 shell 配置。程序也会检查默认安装位置，避免因当前终端尚未刷新 PATH 而重复安装。
+
+### 安装失败与可选跳过
+
+Herdr 下载或安装失败会明确报错；修复网络或系统依赖后，重新运行安装命令，或在本包目录执行 `npm run setup:herdr`。Herdr 安装器负责校验下载的程序；第三方二进制不存放在本仓库中。
+
+若只需要五个插件，可在安装前设置 `PI_ROBOT_SKIP_HERDR=1`。例如 PowerShell：
+
+```powershell
+$env:PI_ROBOT_SKIP_HERDR = '1'
+pi install https://github.com/woertedetiankong/pi-robot
+```
+
+如果 npm 设置了 `ignore-scripts=true`，自动安装不会执行，需要手动运行 `npm run setup:herdr`。已有 Herdr 不会随 pi-robot 更新而自动升级；升级 Herdr 使用 `herdr update`。
 
 | 插件 | 功能 | 入口 |
 | --- | --- | --- |
@@ -42,7 +59,7 @@ print(embedded_document_query("document_grep", '{"query":"VDD"}'))
 
 ## 运行条件
 
-附带 Herdr 的 pi 状态桥接文件和技能，**不包含 Herdr 应用本身**。需另行安装 Herdr 并在真实 Herdr 窗格内运行 pi；普通终端中状态桥接不工作，其他插件仍可使用。未加入 Orca 扩展。
+附带 Herdr 的 pi 状态桥接文件和技能，Herdr 应用在安装时按需通过官方安装器获取。需在真实 Herdr 窗格内运行 pi，状态桥接才会工作；普通终端中其他插件仍可使用。未加入 Orca 扩展。
 
 学习卡片默认开启，生成和追问会产生额外模型用量；`/companion economy` 可节省用量，`/companion off` 可关闭。它仅在交互 TUI 中运行。
 
@@ -55,18 +72,19 @@ pi update https://github.com/woertedetiankong/pi-robot
 pi remove https://github.com/woertedetiankong/pi-robot
 ```
 
-更新后重启 pi。卸载不会自动删除文档缓存、收藏或评测结果。
+更新后重启 pi。卸载不会自动删除 Herdr 应用、文档缓存、收藏或评测结果。
 
 ## 开发与验证
 
 ```sh
 npm ci
+npm run test:installer
 npm test
 npm run test:documents
 npm pack --dry-run
 ```
 
-集成测试使用临时配置与工作目录，检查五个插件的命令、六个技能和真实 Monty 文档查询；不调用模型、不发送会话消息。
+`npm ci` 也会触发 Herdr 检测与按需安装；开发和 CI 中可设置 `PI_ROBOT_SKIP_HERDR=1` 跳过。安装器测试模拟各平台的下载和进程，不实际安装 Herdr。集成测试使用临时配置与工作目录，检查五个插件的命令、六个技能和真实 Monty 文档查询；不调用模型、不发送会话消息。
 
 `packages/` 保存五个组件的源码快照，不使用 Git 子模块；来源与版本见 [sources.json](sources.json)。依赖由根 package.json / package-lock.json 管理。上游更新需审阅后同步对应组件，再运行集成测试。组件内的 README 保留各自用法，整合包的安装以本页为准。
 
