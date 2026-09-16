@@ -1,0 +1,38 @@
+[
+  {
+    "directory": "packages/agent-evals",
+    "name": "pi-agent-evals",
+    "version": "0.1.1",
+    "license": "MIT",
+    "revision": "c151601baf206d54c9e4cba9c195875faf9fdccc"
+  },
+  {
+    "directory": "packages/pi-code-mode",
+    "name": "pi-code-mode",
+    "version": "0.1.0",
+    "license": "MIT",
+    "revision": "2783c88226909e1b3fc7c9f7e8c6a47970f6f679"
+  },
+  {
+    "directory": "packages/pi-embedded-docs",
+    "name": "pi-embedded-docs",
+    "version": "0.1.0",
+    "license": "MIT",
+    "revision": null,
+    "note": "MIT publication authorized by owner on 2026-09-16."
+  },
+  {
+    "directory": "packages/pi-intercom",
+    "name": "pi-intercom",
+    "version": "0.13.0",
+    "license": "MIT",
+    "revision": null
+  },
+  {
+    "directory": "packages/learnlearn",
+    "name": "pi-curiosity-companion",
+    "version": "0.1.0",
+    "license": "MIT",
+    "revision": "5ead7cff09ad9edd68fec3e2780aa3be73f659e5"
+  }
+]

@@ -1,0 +1,26 @@
+import { mkdtemp, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import assert from 'node:assert/strict';
+import { PDFDocument, StandardFonts } from 'pdf-lib';
+import { createCanvas } from '@napi-rs/canvas';
+import { DocumentService } from '../src/service.ts';
+
+const root=await mkdtemp(join(tmpdir(),'pi-docs-smoke-'));
+const canvas=createCanvas(1200,200),ctx=canvas.getContext('2d');
+ctx.fillStyle='white';ctx.fillRect(0,0,1200,200);ctx.fillStyle='black';ctx.font='48px Arial';ctx.fillText('RESET DELAY 25 ms',60,115);
+const pdf=await PDFDocument.create(),font=await pdf.embedFont(StandardFonts.Helvetica);
+const page=pdf.addPage([600,800]);page.drawText('AX17 manual revision B',{x:40,y:750,size:20,font});
+const image=await pdf.embedPng(canvas.toBuffer('image/png'));page.drawImage(image,{x:40,y:400,width:520,height:100});
+await writeFile(join(root,'mixed.pdf'),await pdf.save());
+const service=new DocumentService(root,join(root,'cache'));
+const doc=await service.importFile('mixed.pdf'),scope={ids:[doc.id]};
+assert.match(doc.pages[0].text,/AX17/);assert.doesNotMatch(doc.pages[0].text,/RESET DELAY/);
+const visual=await service.view(doc.id,1,scope);
+const ocr=await service.ocr(doc.id,1,scope);
+assert.match(ocr.text,/RESET\s+DELAY\s+25\s*ms/i);
+assert.equal((await service.search('RESET DELAY',scope)).hits.length,1);
+assert.equal((await service.check([ocr.citation],scope))[0].exists,true);
+const again=await service.ocr(doc.id,1,scope);assert.equal(again.text,ocr.text);
+const report={passed:true,root,document:service.summary(doc),image:visual.image,ocr,checks:['native text excludes embedded image text','real Tesseract reads mixed page','OCR becomes searchable','citation exists','OCR cache reuse']};
+await writeFile(join(root,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

@@ -1,0 +1,65 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, writeFile, readFile, mkdir, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { PDFDocument, StandardFonts } from 'pdf-lib';
+import { createCanvas } from '@napi-rs/canvas';
+import sharp from 'sharp';
+import { DocumentService, parsePages } from '../src/service.ts';
+import { createDocumentTextTools } from '../src/code-mode.ts';
+import { runJob } from '../src/jobs.ts';
+
+export async function fixture(root:string) {
+  const pdf=await PDFDocument.create(),font=await pdf.embedFont(StandardFonts.Helvetica);
+  const p=pdf.addPage([600,800]);
+  p.drawText('DEVICE AX17 revision B',{x:40,y:750,size:20,font});
+  p.drawText('GPIO12 = I2C_SDA. VDD recommended 3.0 to 3.6 V.',{x:40,y:710,size:15,font});
+  p.drawText('Absolute maximum VDD: 4.0 V. This is not an operating value.',{x:40,y:680,size:13,font});
+  const c=createCanvas(1200,200),ctx=c.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,1200,200);ctx.fillStyle='black';ctx.font='48px Arial';ctx.fillText('IMAGE ONLY: RESET DELAY 25 ms',35,115);
+  const image=await pdf.embedPng(c.toBuffer('image/png'));
+  p.drawImage(image,{x:40,y:400,width:520,height:100});
+  const p2=pdf.addPage([600,800]);p2.drawText('PAGE TWO: GPIO13 = I2C_SCL',{x:40,y:720,size:20,font});
+  await writeFile(join(root,'manual.pdf'),await pdf.save());
+  await writeFile(join(root,'scan.png'),c.toBuffer('image/png'));
+  await writeFile(join(root,'notes.md'),'AX17 notes\nDo not confuse GPIO1 with GPIO12.\n');
+}
+test('native PDF, ranges, image evidence, cache invalidation and scope',async t=>{
+  const root=await mkdtemp(join(tmpdir(),'pi-docs-test-'));t.after(()=>rm(root,{recursive:true,force:true}));
+  await fixture(root);const service=new DocumentService(root,join(root,'cache'));
+  const doc=await service.importFile('manual.pdf','1');const scope={ids:[doc.id]};
+  assert.equal(doc.total,2);assert.deepEqual(doc.pages.map(p=>p.page),[1]);
+  assert.match(doc.pages[0].text,/GPIO12/);assert.doesNotMatch(doc.pages[0].text,/RESET DELAY/);
+  assert.equal(service.summary(doc).coverage,'partial');
+  await assert.rejects(()=>service.read(doc.id,2,scope),/coverage/);
+  await assert.rejects(()=>service.read(doc.id,1,{ids:[]}),/scope/);
+  assert.equal((await service.search('GPIO12',scope)).hits.length,1);
+  assert.equal((await service.search('NO_SUCH_REGISTER',scope)).hits.length,0);
+  assert.equal((await service.importFile('manual.pdf','1')).id,doc.id);
+  const view=await service.view(doc.id,1,scope);const meta=await sharp(view.image!).metadata();
+  assert.equal(meta.width,view.data.width);assert.equal(meta.height,view.data.height);
+  const crop=await service.crop(doc.id,1,{x:60,y:80,width:800,height:350},'header',scope);
+  assert.equal((await sharp(crop.image!).metadata()).width,800);
+  assert.deepEqual((await service.region(doc.id,crop.data.cropId,scope)).data.citation,crop.data.citation);
+  await assert.rejects(()=>service.crop(doc.id,1,{x:0,y:0,width:5000,height:20},'bad',scope));
+  assert.equal((await service.check([view.data.citation,crop.data.citation],scope)).every(x=>x.exists),true);
+  assert.equal((await service.check([`[${doc.id}:p2:overview-p1]`],scope))[0].exists,false);
+  const tool=createDocumentTextTools(service,()=>scope)[0];
+  assert.match(String(await tool.execute(['document_grep','{"query":"GPIO12"}'],{})),/GPIO12/);
+  await assert.rejects(()=>tool.execute(['document_view_page','{}'],{}),/text/);
+  await writeFile(join(root,'manual.pdf'),await readFile(join(root,'notes.md')));
+  await assert.rejects(()=>service.read(doc.id,1,scope),/Source changed/);
+});
+test('path boundaries, ranges, text pagination and abort',async t=>{
+  const root=await mkdtemp(join(tmpdir(),'pi-docs-path-'));t.after(()=>rm(root,{recursive:true,force:true}));
+  await mkdir(join(root,'work'));await writeFile(join(root,'outside.txt'),'outside');
+  const service=new DocumentService(join(root,'work'),join(root,'cache'));
+  await assert.rejects(()=>service.importFile('../outside.txt'),/outside/);
+  const doc=await service.importFile('../outside.txt',undefined,true),scope={ids:[doc.id]};
+  assert.equal((await service.read(doc.id,1,scope,0,3)).nextOffset,3);
+  assert.deepEqual(parsePages('1-3,2,7'),[1,2,3,7]);
+  assert.throws(()=>parsePages('1-9999'));assert.throws(()=>parsePages('0'));
+  assert.throws(()=>parsePages('1;whoami'));
+  const controller=new AbortController();controller.abort();
+  await assert.rejects(()=>runJob({op:'parse'},controller.signal));
+});

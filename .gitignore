@@ -1,0 +1,11 @@
+node_modules/
+*.tgz
+.pi/
+.env
+.env.*
+!.env.example
+artifacts/
+results/
+test-results/
+__pycache__/
+.production-check.json

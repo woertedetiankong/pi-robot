@@ -1,0 +1,49 @@
+{
+  "name": "pi-agent-evals",
+  "version": "0.1.1",
+  "description": "Local behavioral evals for pi and Codex: cases, graders, ablations and reports.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "agent-evals": "./bin/agent-evals.mjs"
+  },
+  "keywords": [
+    "pi-package",
+    "evals",
+    "codex",
+    "skills"
+  ],
+  "pi": {
+    "extensions": [
+      "./src/pi/extension.ts"
+    ],
+    "skills": [
+      "./skills/agent-evals"
+    ]
+  },
+  "exports": {
+    ".": "./src/runner.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "skills",
+    "examples",
+    "README.md",
+    "docs/compatibility.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:pi": "node scripts/check-pi-protocol.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "dependencies": {
+    "minimatch": "10.2.6",
+    "smol-toml": "1.8.0",
+    "yaml": "2.9.1"
+  }
+}

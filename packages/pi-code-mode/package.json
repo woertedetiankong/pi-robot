@@ -1,0 +1,55 @@
+{
+	"name": "pi-code-mode",
+	"version": "0.1.0",
+	"description": "Code-mode plugin for the pi coding agent: the model writes sandboxed Python (via @pydantic/monty worker pools) that calls pi's tools as plain functions — with approval-gated mutations, resumable suspensions, persistent REPL state, and pre-execution type checking.",
+	"type": "module",
+	"license": "MIT",
+	"keywords": [
+		"pi-package",
+		"pi",
+		"python",
+		"sandbox",
+		"code-mode",
+		"monty",
+		"code-execution"
+	],
+	"pi": {
+		"extensions": [
+			"./src/pi/extension.ts"
+		]
+	},
+	"exports": {
+		".": "./src/index.ts",
+		"./pi": "./src/pi/extension.ts"
+	},
+	"files": [
+		"src",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"test": "node --test \"test/*.test.ts\"",
+		"typecheck": "tsc --noEmit",
+		"smoke": "node test/smoke.ts"
+	},
+	"engines": {
+		"node": ">=22.19.0"
+	},
+	"dependencies": {
+		"@pydantic/monty": "0.0.23",
+		"typebox": "1.1.38"
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*"
+	},
+	"peerDependenciesMeta": {
+		"@earendil-works/pi-coding-agent": {
+			"optional": true
+		}
+	},
+	"devDependencies": {
+		"@earendil-works/pi-coding-agent": "0.80.6",
+		"@types/node": "26.1.1",
+		"typescript": "7.0.2"
+	}
+}

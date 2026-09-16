@@ -1,0 +1,55 @@
+{
+  "name": "pi-embedded-docs",
+  "version": "0.1.0",
+  "description": "Local, source-cited datasheet and schematic tools for pi",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "pi-package",
+    "embedded",
+    "datasheet"
+  ],
+  "pi": {
+    "extensions": [
+      "./src/extension.ts"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  },
+  "exports": {
+    ".": "./src/service.ts",
+    "./code-mode": "./src/code-mode.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts",
+    "smoke": "tsx scripts/smoke.ts"
+  },
+  "engines": {
+    "node": ">=22.19"
+  },
+  "dependencies": {
+    "@llamaindex/liteparse": "2.14.4",
+    "@napi-rs/canvas": "0.1.100",
+    "pdfjs-dist": "5.6.205",
+    "sharp": "0.34.5",
+    "tesseract.js": "7.0.0",
+    "typebox": "1.1.38"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": ">=0.80.6"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "0.85.1",
+    "@types/node": "^24.0.0",
+    "tsx": "^4.22.0",
+    "typescript": "^5.9.3",
+    "pdf-lib": "^1.17.1"
+  }
+}

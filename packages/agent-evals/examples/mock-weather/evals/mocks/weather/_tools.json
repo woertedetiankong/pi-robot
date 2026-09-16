@@ -1,0 +1,1 @@
+{"tools":[{"name":"lookup","description":"Look up a city's weather.","inputSchema":{"type":"object","properties":{"city":{"type":"string"}},"required":["city"],"additionalProperties":false}}]}

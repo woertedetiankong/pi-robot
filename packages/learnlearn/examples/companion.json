@@ -1,0 +1,21 @@
+{
+  "enabled": true,
+  "mode": "mixed",
+  "format": "mixed",
+  "layout": "summary",
+  "usage": "standard",
+  "intervalSeconds": 120,
+  "selectedCollections": ["软件设计"],
+  "collections": {
+    "软件设计": {
+      "directories": ["./examples/knowledge", "./docs"],
+      "include": ["**/*.md", "**/*.markdown"],
+      "exclude": ["tasks/**"]
+    },
+    "个人灵感": {
+      "directories": ["~/Documents/MyVault/灵感", "~/Documents/MyVault/心理学"],
+      "exclude": ["私人/**"]
+    }
+  },
+  "saveDirectory": "./.pi/companion-favorites"
+}

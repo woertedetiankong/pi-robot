@@ -1,0 +1,68 @@
+{
+  "name": "pi-robot",
+  "version": "0.1.0",
+  "description": "Five pi extensions with integrated document tools and collaboration skills",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/woertedetiankong/pi-robot.git"
+  },
+  "keywords": [
+    "pi-package",
+    "pi-extension"
+  ],
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "files": [
+    "extensions",
+    "packages",
+    "skills",
+    "README.md",
+    "THIRD_PARTY_NOTICES.md",
+    "sources.json",
+    "LICENSE"
+  ],
+  "pi": {
+    "extensions": [
+      "./packages/pi-embedded-docs/src/extension.ts",
+      "./extensions/code-mode.ts",
+      "./packages/agent-evals/src/pi/extension.ts",
+      "./packages/pi-intercom/index.ts",
+      "./packages/learnlearn/index.ts",
+      "./extensions/herdr-agent-state.ts"
+    ],
+    "skills": [
+      "./skills",
+      "./packages/agent-evals/skills",
+      "./packages/pi-intercom/skills",
+      "./packages/pi-embedded-docs/skills"
+    ]
+  },
+  "dependencies": {
+    "minimatch": "10.2.6",
+    "smol-toml": "1.8.0",
+    "yaml": "2.9.1",
+    "@pydantic/monty": "0.0.23",
+    "typebox": "1.1.38",
+    "@llamaindex/liteparse": "2.14.4",
+    "@napi-rs/canvas": "0.1.100",
+    "pdfjs-dist": "5.6.205",
+    "sharp": "0.34.5",
+    "tesseract.js": "7.0.0",
+    "tsx": "^4.20.0"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "0.85.1",
+    "@earendil-works/pi-ai": "0.85.1",
+    "@earendil-works/pi-tui": "0.85.1",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "@types/node": "^24.0.0",
+    "pdf-lib": "^1.17.1"
+  },
+  "scripts": {
+    "test": "tsx test/bundle-smoke.ts"
+  }
+}
