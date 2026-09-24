@@ -1,6 +1,6 @@
 # pi-robot
 
-一次安装五个 pi 插件，并在缺少 Herdr 时自动安装 Herdr 应用：Python 工具编排、行为评测、会话通信、嵌入式文档分析和学习卡片。
+一次安装四个 pi 插件，并在缺少 Herdr 时自动安装 Herdr 应用：Python 工具编排、行为评测、会话通信和嵌入式文档分析。
 
 ## 安装
 
@@ -20,7 +20,7 @@ Windows 官方安装器会更新用户 PATH；macOS / Linux 默认安装到 `~/.
 
 Herdr 下载或安装失败会明确报错；修复网络或系统依赖后，重新运行安装命令，或在本包目录执行 `npm run setup:herdr`。Herdr 安装器负责校验下载的程序；第三方二进制不存放在本仓库中。
 
-若只需要五个插件，可在安装前设置 `PI_ROBOT_SKIP_HERDR=1`。例如 PowerShell：
+若只需要四个插件，可在安装前设置 `PI_ROBOT_SKIP_HERDR=1`。例如 PowerShell：
 
 ```powershell
 $env:PI_ROBOT_SKIP_HERDR = '1'
@@ -35,7 +35,6 @@ pi install https://github.com/woertedetiankong/pi-robot
 | agent-evals | skill / 扩展行为评测 | `/eval` |
 | pi-intercom | 本机 pi 会话通信 | `/intercom`、`/intercom-id` |
 | pi-embedded-docs | Datasheet、PDF、原理图与页码证据 | `/docs`、`document_*` 工具 |
-| learnlearn | 学习卡片、答题和追问 | `/companion` |
 
 附带六个技能：`herdr`、`pi-teamwork`、`agent-evals`、`pi-intercom`、`datasheet-extraction`、`schematic-analysis`。
 
@@ -49,7 +48,7 @@ print(embedded_document_query("document_grep", '{"query":"VDD"}'))
 
 ## 从单独安装迁移
 
-先通过 `pi list` 查看旧安装，用 `pi remove <原来的source>` 移除五个旧包的配置入口，再安装本包，避免同名工具和命令重复加载。移除本地包入口不会删除原始源码。
+先通过 `pi list` 查看旧安装，用 `pi remove <原来的source>` 移除四个旧包的配置入口，再安装本包，避免同名工具和命令重复加载。移除本地包入口不会删除原始源码。
 
 如果以前使用文档插件的组合安装器，还要从 pi settings.json 的 `extensions` 中移除旧 `embedded-docs-install/code-mode.ts` 入口。本包已有自己的组合入口。
 
@@ -61,13 +60,11 @@ print(embedded_document_query("document_grep", '{"query":"VDD"}'))
 
 附带 Herdr 的 pi 状态桥接文件和技能，Herdr 应用在安装时按需通过官方安装器获取。需在真实 Herdr 窗格内运行 pi，状态桥接才会工作；普通终端中其他插件仍可使用。未加入 Orca 扩展。
 
-学习卡片默认开启，生成和追问会产生额外模型用量；`/companion economy` 可节省用量，`/companion off` 可关闭。它仅在交互 TUI 中运行。
-
 PDF/OCR 在本地处理，首次 OCR 可能下载语言数据。交给 agent 的文档文本和图片会进入所选模型上下文。原理图分析需要支持图片输入的模型。行为评测实际运行 agent 时也会消耗模型用量。
 
 ## 更新与卸载
 
-0.1.2 同步 learnlearn 的 `cc74746` 修复：追问聊天中可用 ↑ / ↓ 逐行滚动，不影响输入草稿；同时更新快捷键提示和回归测试。
+0.1.3 移除内置学习卡片插件（learnlearn / pi-curiosity-companion），不再注册 `/companion` 命令或发起学习卡片的模型请求。其余四个插件、Herdr 状态桥接及六个技能保留。
 
 ```sh
 pi update https://github.com/woertedetiankong/pi-robot
@@ -86,9 +83,9 @@ npm run test:documents
 npm pack --dry-run
 ```
 
-`npm ci` 也会触发 Herdr 检测与按需安装；开发和 CI 中可设置 `PI_ROBOT_SKIP_HERDR=1` 跳过。安装器测试模拟各平台的下载和进程，不实际安装 Herdr。集成测试使用临时配置与工作目录，检查五个插件的命令、六个技能和真实 Monty 文档查询；不调用模型、不发送会话消息。
+`npm ci` 也会触发 Herdr 检测与按需安装；开发和 CI 中可设置 `PI_ROBOT_SKIP_HERDR=1` 跳过。安装器测试模拟各平台的下载和进程，不实际安装 Herdr。集成测试使用临时配置与工作目录，检查四个插件的命令、六个技能和真实 Monty 文档查询；不调用模型、不发送会话消息。
 
-`packages/` 保存五个组件的源码快照，不使用 Git 子模块；来源与版本见 [sources.json](sources.json)。依赖由根 package.json / package-lock.json 管理。上游更新需审阅后同步对应组件，再运行集成测试。组件内的 README 保留各自用法，整合包的安装以本页为准。
+`packages/` 保存四个组件的源码快照，不使用 Git 子模块；来源与版本见 [sources.json](sources.json)。依赖由根 package.json / package-lock.json 管理。上游更新需审阅后同步对应组件，再运行集成测试。组件内的 README 保留各自用法，整合包的安装以本页为准。
 
 ## 许可
 

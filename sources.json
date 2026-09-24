@@ -35,12 +35,5 @@
     "bundleChanges": [
       "Trailing whitespace normalized; runtime logic unchanged"
     ]
-  },
-  {
-    "directory": "packages/learnlearn",
-    "name": "pi-curiosity-companion",
-    "version": "0.1.0",
-    "license": "MIT",
-    "revision": "cc74746911e820b65e609f6f4413fedda190f438"
   }
 ]

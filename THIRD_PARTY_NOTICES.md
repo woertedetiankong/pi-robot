@@ -2,7 +2,6 @@
 
 - `packages/agent-evals`: https://github.com/woertedetiankong/agent-evals ? MIT; original LICENSE retained.
 - `packages/pi-code-mode`: https://github.com/woertedetiankong/pi-code-mode ? MIT; original LICENSE retained.
-- `packages/learnlearn`: https://github.com/woertedetiankong/learnlearn ? MIT; original LICENSE retained.
 - `packages/pi-intercom`: npm package pi-intercom 0.13.0, copyright 2026 Nico Bailon ? MIT; original LICENSE retained. This is a bundled snapshot, not a claim of original authorship.
 - `packages/pi-embedded-docs`: local author-owned implementation; owner authorized MIT publication on 2026-09-16. No private upstream platform or third-party manuals are included.
 - `skills/pi-teamwork`: local collaboration workflow supplied by the repository owner.

@@ -21,9 +21,10 @@ await loader.reload();
 const loaded = loader.getExtensions();
 assert.deepEqual(loaded.errors, []);
 const commands = loaded.extensions.flatMap(e => [...e.commands.keys()]);
-for (const name of ["docs", "code-reset", "eval", "intercom", "companion"]) {
+for (const name of ["docs", "code-reset", "eval", "intercom"]) {
   assert.equal(commands.filter(n => n === name).length, 1, name);
 }
+assert.ok(!commands.includes("companion"), "removed companion command must not load");
 const skills = loader.getSkills().skills.map(s => s.name);
 for (const name of ["herdr", "pi-teamwork", "agent-evals", "pi-intercom", "datasheet-extraction", "schematic-analysis"]) assert.ok(skills.includes(name), name);
 const {session} = await createAgentSession({cwd, agentDir, resourceLoader:loader, settingsManager:SettingsManager.inMemory(), sessionManager:SessionManager.inMemory()});
